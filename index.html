@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#123d35">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="합격 플래너">
+  <meta name="description" content="세무직 공무원 수험생을 위한 공부 타이머, 오답 복습, 영단어 및 학습 통계 앱">
+  <title>세무직 합격 플래너</title>
+  <link rel="icon" href="app-icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar">
+      <div class="brand">
+        <div class="brand-mark">稅</div>
+        <div>
+          <strong id="brandTitle">세무직 합격 플래너</strong>
+          <span>오늘의 공부가 합격을 만듭니다</span>
+        </div>
+      </div>
+
+      <nav class="nav-list" aria-label="주 메뉴">
+        <button class="nav-item active" data-page="home">
+          <span class="nav-icon">⌂</span><span>홈</span>
+        </button>
+        <button class="nav-item" data-page="study">
+          <span class="nav-icon">▤</span><span>공부 기록</span>
+        </button>
+        <button class="nav-item" data-page="review">
+          <span class="nav-icon">↻</span><span>오답 · 복습</span>
+          <span class="nav-badge" id="reviewBadge">0</span>
+        </button>
+        <button class="nav-item" data-page="words">
+          <span class="nav-icon">A</span><span>영어 단어</span>
+        </button>
+        <button class="nav-item" data-page="stats">
+          <span class="nav-icon">⌁</span><span>통계</span>
+        </button>
+        <button class="nav-item" data-page="settings">
+          <span class="nav-icon">⚙</span><span>꾸미기 · 설정</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-quote">
+        <span>오늘의 한마디</span>
+        <p>“완벽한 하루보다<br>꾸준한 하루가 강하다.”</p>
+      </div>
+    </aside>
+
+    <main class="main">
+      <header class="topbar">
+        <div>
+          <button class="mobile-menu" id="mobileMenu" aria-label="메뉴 열기">☰</button>
+          <p class="eyebrow" id="todayLabel"></p>
+          <h1 id="pageTitle">좋은 아침이에요! <span>오늘도 한 걸음 👋</span></h1>
+        </div>
+        <div class="top-actions">
+          <button class="icon-button" id="themeButton" aria-label="테마 전환">☼</button>
+          <button class="primary-button" data-open-modal="study">＋ 공부 기록</button>
+        </div>
+      </header>
+
+      <section class="page active" id="homePage">
+        <div class="hero-grid">
+          <article class="dday-card">
+            <div class="dday-copy">
+              <span id="examTitleHome">2027 세무직 9급 필기시험</span>
+              <strong id="ddayNumber">D-000</strong>
+              <button class="text-button" id="editExamDate">시험일 설정 ›</button>
+            </div>
+            <div class="goal-ring" id="goalRing">
+              <div>
+                <strong id="goalPercent">0%</strong>
+                <span>오늘 목표</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="focus-card">
+            <div class="card-head">
+              <div>
+                <span>오늘의 집중</span>
+                <h2>순공시간</h2>
+              </div>
+              <span class="status-pill">LIVE</span>
+            </div>
+            <div class="time-value"><strong id="todayNet">0</strong><span>시간</span> <strong id="todayNetMin">0</strong><span>분</span></div>
+            <div class="progress-track"><i id="netProgress"></i></div>
+            <p>목표 <b id="dailyGoalLabel">8시간</b>까지 <span id="remainingTime">8시간 남았어요</span></p>
+          </article>
+        </div>
+
+        <div class="timer-planner-grid">
+          <article class="timer-card" id="timerCard">
+            <div class="timer-card-head">
+              <div>
+                <span class="section-kicker light">FOCUS TIMER</span>
+                <h2>지금 공부하기</h2>
+              </div>
+              <span class="timer-state" id="timerState">준비</span>
+            </div>
+            <div class="timer-settings" id="timerSettings">
+              <select id="timerSubject" aria-label="타이머 과목">
+                <option>국어</option><option>영어</option><option>회계학</option><option>세법</option>
+              </select>
+              <input id="timerDetail" aria-label="세부영역" placeholder="세부영역을 입력하세요">
+              <select id="timerType" aria-label="공부유형">
+                <option>이론</option><option>기출</option><option>오답</option><option>모의고사</option>
+                <option>암기</option><option>단어</option><option>복습</option><option>강의</option>
+              </select>
+            </div>
+            <div class="timer-display" id="timerDisplay">00:00:00</div>
+            <p class="timer-current" id="timerCurrent">과목과 세부영역을 고르고 시작해 보세요.</p>
+            <div class="timer-actions">
+              <button class="timer-start" id="timerStart">▶ 공부 시작</button>
+              <button class="timer-pause" id="timerPause" disabled>Ⅱ 일시정지</button>
+              <button class="timer-finish" id="timerFinish" disabled>■ 종료 · 저장</button>
+            </div>
+          </article>
+
+          <article class="panel day-planner">
+            <div class="panel-head">
+              <div><span class="section-kicker coral">COLOR PLANNER</span><h2>오늘의 컬러 플래너</h2></div>
+              <div class="planner-total" id="plannerTotal">0시간 0분</div>
+            </div>
+            <div class="planner-legend" id="plannerLegend"></div>
+            <div class="planner-timeline" id="plannerTimeline"></div>
+          </article>
+        </div>
+
+        <div class="metric-grid">
+          <article class="metric-card">
+            <div class="metric-icon peach">◷</div>
+            <div><span>오늘 총 공부시간</span><strong id="todayTotal">0시간 0분</strong><small id="todayRecordCount">0개 기록</small></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon mint">✓</div>
+            <div><span>목표 달성률</span><strong id="goalRate">0%</strong><small id="goalComparison">조금만 더 힘내요</small></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon lilac">▦</div>
+            <div><span>이번 주 누적</span><strong id="weeklyTotal">0시간</strong><small id="weeklyComparison">지난주와 비교 중</small></div>
+          </article>
+          <article class="metric-card">
+            <div class="metric-icon blue">A</div>
+            <div><span>오늘 단어 DAY</span><strong id="todayWordDay">DAY 01</strong><small id="wordStatus">학습 전</small></div>
+          </article>
+        </div>
+
+        <div class="content-grid">
+          <article class="panel subject-panel">
+            <div class="panel-head">
+              <div><span class="section-kicker">TODAY</span><h2>과목별 공부시간</h2></div>
+              <button class="text-button" data-page-link="study">전체 기록 보기 ›</button>
+            </div>
+            <div class="subject-list" id="subjectBars"></div>
+          </article>
+
+          <article class="panel review-panel">
+            <div class="panel-head">
+              <div><span class="section-kicker coral">REVIEW</span><h2>오늘 해야 할 복습</h2></div>
+              <button class="text-button" data-open-modal="review">＋ 추가</button>
+            </div>
+            <div id="todayReviews" class="review-list"></div>
+          </article>
+        </div>
+
+        <article class="panel weekly-panel">
+          <div class="panel-head">
+            <div><span class="section-kicker">WEEKLY</span><h2>이번 주 공부 흐름</h2></div>
+            <div class="legend"><span><i class="legend-total"></i>총 공부</span><span><i class="legend-net"></i>순공</span></div>
+          </div>
+          <div class="bar-chart" id="weeklyChart"></div>
+        </article>
+      </section>
+
+      <section class="page" id="studyPage">
+        <div class="page-toolbar">
+          <div class="filter-tabs" id="studyFilters">
+            <button class="active" data-filter="전체">전체</button>
+            <button data-filter="국어">국어</button><button data-filter="영어">영어</button>
+            <button data-filter="회계학">회계학</button><button data-filter="세법">세법</button>
+          </div>
+          <button class="primary-button" data-open-modal="study">＋ 새 공부 기록</button>
+        </div>
+        <div class="summary-strip" id="studySummary"></div>
+        <article class="panel table-panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>날짜</th><th>과목 / 세부영역</th><th>공부유형</th><th>공부시간</th><th>순공시간</th><th>문제</th><th>정답률</th><th>회독</th><th></th></tr></thead>
+              <tbody id="studyTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="reviewPage">
+        <div class="page-toolbar">
+          <div>
+            <p class="page-description">틀린 문제를 합격의 자산으로 바꾸세요.</p>
+          </div>
+          <button class="primary-button" data-open-modal="review">＋ 오답 추가</button>
+        </div>
+        <div class="review-board">
+          <div class="review-column">
+            <div class="column-title"><h3>복습 예정</h3><span id="pendingCount">0</span></div>
+            <div id="pendingReviews" class="review-cards"></div>
+          </div>
+          <div class="review-column">
+            <div class="column-title"><h3>복습 완료</h3><span id="doneCount">0</span></div>
+            <div id="doneReviews" class="review-cards"></div>
+          </div>
+        </div>
+        <article class="panel smart-quiz-panel">
+          <div class="quiz-intro">
+            <div>
+              <span class="section-kicker coral">AI REVIEW QUIZ</span>
+              <h2>오답 기반 스마트 문제</h2>
+              <p>저장한 세부영역·출처·틀린 이유를 기기 안에서 분석해 회상 문제를 만들어요.</p>
+            </div>
+            <button class="primary-button" id="startReviewQuiz">문제 만들기</button>
+          </div>
+          <div class="quiz-stage" id="reviewQuizStage">
+            <div class="empty-state">오답을 등록한 뒤 문제 만들기를 눌러보세요.</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="wordsPage">
+        <div class="word-hero">
+          <div>
+            <span class="section-kicker light">VOCABULARY</span>
+            <h2>영단어도 회독이 답이다</h2>
+            <p>오늘의 DAY를 끝내고, 헷갈린 단어는 복습 일정으로 다시 만나세요.</p>
+          </div>
+          <button class="light-button" data-open-modal="words">＋ DAY 기록</button>
+        </div>
+        <div class="word-stats" id="wordStats"></div>
+        <div class="word-grid" id="wordGrid"></div>
+        <article class="panel smart-quiz-panel word-quiz-panel">
+          <div class="quiz-intro">
+            <div>
+              <span class="section-kicker">VOCAB TEST</span>
+              <h2>헷갈린 단어 자동 시험</h2>
+              <p>`영단어 = 뜻` 형식으로 저장한 단어에서 무작위 시험을 만들어요.</p>
+            </div>
+            <div class="quiz-start-actions">
+              <select id="wordQuizDirection" aria-label="시험 방식">
+                <option value="word">영단어 보고 뜻 맞히기</option>
+                <option value="meaning">뜻 보고 영단어 맞히기</option>
+                <option value="mixed">섞어서 출제</option>
+              </select>
+              <button class="primary-button" id="startWordQuiz">시험 시작</button>
+            </div>
+          </div>
+          <div class="quiz-stage" id="wordQuizStage">
+            <div class="empty-state">헷갈린 단어를 추가하면 나만의 단어시험을 볼 수 있어요.</div>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="statsPage">
+        <div class="stats-controls">
+          <div class="filter-tabs">
+            <button class="active">이번 주</button><button>이번 달</button><button>전체</button>
+          </div>
+        </div>
+        <div class="stats-top" id="statsTop"></div>
+        <div class="stats-grid">
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">TIME</span><h2>주간 공부시간</h2></div></div>
+            <div class="bar-chart large" id="statsWeeklyChart"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker coral">SUBJECT</span><h2>과목별 공부 비중</h2></div></div>
+            <div class="donut-layout"><div class="donut" id="subjectDonut"><span>0h</span></div><div id="donutLegend"></div></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">ACCURACY</span><h2>과목별 정답률</h2></div></div>
+            <div class="accuracy-list" id="accuracyList"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker coral">PROGRESS</span><h2>회독 · 오답 현황</h2></div></div>
+            <div class="progress-matrix" id="progressMatrix"></div>
+          </article>
+        </div>
+      </section>
+
+      <section class="page" id="settingsPage">
+        <div class="settings-hero">
+          <div>
+            <span class="section-kicker light">MY PLANNER</span>
+            <h2>나만의 합격 플래너로 꾸미기</h2>
+            <p>색상과 사진, 응시 직렬과 과목을 내 공부 방식에 맞게 바꿔보세요.</p>
+          </div>
+          <button class="light-button" id="resetSettings">기본 설정으로</button>
+        </div>
+
+        <div class="settings-grid">
+          <article class="panel setting-panel">
+            <div class="setting-title"><span class="setting-number">01</span><div><h3>테마 색상</h3><p>앱의 주요 색상과 강조 색상을 선택하세요.</p></div></div>
+            <div class="theme-presets" id="themePresets">
+              <button data-theme="forest" style="--swatch:#164b40" aria-label="포레스트"></button>
+              <button data-theme="navy" style="--swatch:#263d5a" aria-label="네이비"></button>
+              <button data-theme="purple" style="--swatch:#654d7c" aria-label="퍼플"></button>
+              <button data-theme="rose" style="--swatch:#985d69" aria-label="로즈"></button>
+              <button data-theme="brown" style="--swatch:#6f553f" aria-label="브라운"></button>
+            </div>
+            <div class="color-settings">
+              <label>메인 색상 <input type="color" id="primaryColor" value="#164b40"></label>
+              <label>강조 색상 <input type="color" id="accentColor" value="#e98f70"></label>
+              <label>배경 색상 <input type="color" id="backgroundColor" value="#f5f3ed"></label>
+            </div>
+          </article>
+
+          <article class="panel setting-panel photo-setting">
+            <div class="setting-title"><span class="setting-number">02</span><div><h3>배경 사진</h3><p>카메라 또는 사진 앨범에서 이미지를 선택하세요.</p></div></div>
+            <div class="photo-preview" id="photoPreview">
+              <span>선택한 사진이 여기에 보여요</span>
+              <video id="cameraPreview" autoplay playsinline muted></video>
+              <canvas id="cameraCanvas"></canvas>
+            </div>
+            <div class="photo-actions">
+              <button class="secondary-button" id="requestCamera">📷 카메라 권한 요청</button>
+              <button class="secondary-button" id="capturePhoto" hidden>촬영하기</button>
+              <label class="secondary-button file-button">사진 선택<input type="file" id="photoInput" accept="image/*"></label>
+              <button class="text-button" id="removePhoto">사진 제거</button>
+            </div>
+            <p class="permission-status" id="permissionStatus">사진은 기기 안에만 저장되며 외부로 전송되지 않습니다.</p>
+          </article>
+
+          <article class="panel setting-panel">
+            <div class="setting-title"><span class="setting-number">03</span><div><h3>응시 직렬</h3><p>직렬을 선택하면 추천 과목이 자동으로 구성됩니다.</p></div></div>
+            <select class="large-select" id="jobSeries">
+              <option value="세무직">세무직</option>
+              <option value="일반행정직">일반행정직</option>
+              <option value="교육행정직">교육행정직</option>
+              <option value="검찰직">검찰직</option>
+              <option value="교정직">교정직</option>
+              <option value="관세직">관세직</option>
+              <option value="custom">직접 설정</option>
+            </select>
+            <label class="setting-field">표시할 시험 이름<input id="examTitle" placeholder="예: 2027 세무직 9급 필기시험"></label>
+          </article>
+
+          <article class="panel setting-panel">
+            <div class="setting-title"><span class="setting-number">04</span><div><h3>과목 구성</h3><p>과목 이름과 플래너 색상을 직접 수정할 수 있습니다.</p></div></div>
+            <div class="subject-editor" id="subjectEditor"></div>
+            <button class="secondary-button add-subject" id="addSubject">＋ 과목 추가</button>
+          </article>
+        </div>
+        <div class="settings-savebar">
+          <span id="settingsSaveHint">변경사항은 이 기기에 저장됩니다.</span>
+          <button class="primary-button" id="saveSettings">설정 저장하기</button>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <div><span class="section-kicker" id="modalKicker">RECORD</span><h2 id="modalTitle">공부 기록 추가</h2></div>
+        <button class="close-button" id="closeModal" aria-label="닫기">×</button>
+      </div>
+      <form id="recordForm"></form>
+    </div>
+  </div>
+
+  <div class="install-sheet" id="installSheet" aria-hidden="true">
+    <div class="install-sheet-card">
+      <button class="install-close" id="installClose" aria-label="닫기">×</button>
+      <img src="icons/icon-192.png" alt="">
+      <div class="install-copy">
+        <strong>휴대폰에 앱 설치하기</strong>
+        <p id="installGuide">홈 화면에 추가하면 일반 앱처럼 바로 실행할 수 있어요.</p>
+      </div>
+      <button class="primary-button" id="installApp">설치</button>
+    </div>
+  </div>
+
+  <div class="toast" id="toast">저장했어요!</div>
+  <script src="app.js"></script>
+</body>
+</html>
