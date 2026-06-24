@@ -7,6 +7,7 @@
   --line: #e4e2db;
   --green: #164b40;
   --green-2: #287567;
+  --timer-color: #164b40;
   --mint: #b9d8cd;
   --coral: #e98f70;
   --yellow: #edc76a;
@@ -128,7 +129,7 @@ button { cursor: pointer; }
 .timer-planner-grid { margin-top: 18px; display: grid; grid-template-columns: .78fr 1.22fr; gap: 18px; }
 .timer-card {
   min-height: 290px; padding: 25px; border-radius: var(--radius); color: white;
-  background: linear-gradient(145deg, var(--green), color-mix(in srgb, var(--green) 72%, #000)); box-shadow: var(--shadow);
+  background: var(--timer-color); box-shadow: var(--shadow);
 }
 .timer-card.running { box-shadow: 0 14px 42px rgba(22,75,64,.24); }
 .timer-card-head { display: flex; justify-content: space-between; align-items: flex-start; }

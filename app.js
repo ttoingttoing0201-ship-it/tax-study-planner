@@ -14,11 +14,11 @@ const seriesPresets = {
 };
 const subjectPalette = ["#e98f70", "#87a9bd", "#a89ab8", "#edc76a", "#5fa68d", "#d7869a", "#7786b3", "#b88b62"];
 const themePresets = {
-  forest: { primary:"#164b40", accent:"#e98f70", background:"#f5f3ed" },
-  navy: { primary:"#263d5a", accent:"#dd8a68", background:"#f2f4f7" },
-  purple: { primary:"#654d7c", accent:"#d98979", background:"#f5f1f6" },
-  rose: { primary:"#985d69", accent:"#d99662", background:"#f8f2f1" },
-  brown: { primary:"#6f553f", accent:"#c77b61", background:"#f6f1e9" }
+  forest: { primary:"#164b40", accent:"#e98f70", background:"#f5f3ed", timer:"#164b40" },
+  navy: { primary:"#263d5a", accent:"#dd8a68", background:"#f2f4f7", timer:"#263d5a" },
+  purple: { primary:"#654d7c", accent:"#d98979", background:"#f5f1f6", timer:"#654d7c" },
+  rose: { primary:"#985d69", accent:"#d99662", background:"#f8f2f1", timer:"#985d69" },
+  brown: { primary:"#6f553f", accent:"#c77b61", background:"#f6f1e9", timer:"#6f553f" }
 };
 const types = ["이론", "기출", "오답", "모의고사", "암기", "단어", "복습", "강의"];
 const storeKey = "taxPlannerDataV1";
@@ -32,7 +32,7 @@ const seedData = {
   settings: {
     examDate: "2027-04-03", dailyGoal: 480, jobSeries: "세무직",
     examTitle: "2027 세무직 9급 필기시험", subjects: defaultSubjects,
-    theme: { primary:"#164b40", accent:"#e98f70", background:"#f5f3ed" },
+    theme: { primary:"#164b40", accent:"#e98f70", background:"#f5f3ed", timer:"#164b40" },
     backgroundPhoto: ""
   },
   study: [
@@ -109,6 +109,7 @@ function normalizeSettings() {
   data.settings.jobSeries ||= "세무직";
   data.settings.examTitle ||= `2027 ${data.settings.jobSeries} 9급 필기시험`;
   data.settings.theme ||= { ...themePresets.forest };
+  data.settings.theme.timer ||= data.settings.theme.primary;
   data.settings.subjects ||= { ...defaultSubjects };
   data.settings.backgroundPhoto ||= "";
   data.words ||= [];
@@ -147,6 +148,7 @@ function applyAppearance() {
   document.documentElement.style.setProperty("--green-2", mixColor(theme.primary, "#ffffff", .22));
   document.documentElement.style.setProperty("--coral", theme.accent);
   document.documentElement.style.setProperty("--bg", theme.background);
+  document.documentElement.style.setProperty("--timer-color", theme.timer || theme.primary);
   document.querySelector('meta[name="theme-color"]').setAttribute("content", theme.primary);
   document.body.classList.toggle("custom-photo", !!data.settings.backgroundPhoto);
   document.body.style.setProperty("--custom-photo", data.settings.backgroundPhoto ? `url("${data.settings.backgroundPhoto}")` : "none");
@@ -180,10 +182,11 @@ function bindSettings() {
     $("#primaryColor").value = theme.primary;
     $("#accentColor").value = theme.accent;
     $("#backgroundColor").value = theme.background;
+    $("#timerColor").value = theme.timer;
     $$("#themePresets button").forEach(item => item.classList.toggle("active", item === button));
     previewAppearance();
   });
-  ["primaryColor","accentColor","backgroundColor"].forEach(id => $(`#${id}`).addEventListener("input", previewAppearance));
+  ["primaryColor","accentColor","backgroundColor","timerColor"].forEach(id => $(`#${id}`).addEventListener("input", previewAppearance));
   $("#jobSeries").addEventListener("change", event => {
     if (event.target.value === "custom") return;
     renderSubjectEditor(buildPresetSubjects(event.target.value));
@@ -225,6 +228,7 @@ function previewAppearance() {
   document.documentElement.style.setProperty("--green-2", mixColor($("#primaryColor").value, "#ffffff", .22));
   document.documentElement.style.setProperty("--coral", $("#accentColor").value);
   document.documentElement.style.setProperty("--bg", $("#backgroundColor").value);
+  document.documentElement.style.setProperty("--timer-color", $("#timerColor").value);
 }
 
 function buildPresetSubjects(series) {
@@ -239,6 +243,7 @@ function renderSettings() {
   $("#primaryColor").value = theme.primary;
   $("#accentColor").value = theme.accent;
   $("#backgroundColor").value = theme.background;
+  $("#timerColor").value = theme.timer || theme.primary;
   $("#jobSeries").value = seriesPresets[data.settings.jobSeries] ? data.settings.jobSeries : "custom";
   $("#examTitle").value = data.settings.examTitle;
   renderSubjectEditor(Object.entries(subjects).map(([name,info]) => ({ name, color:info.color })));
@@ -272,7 +277,8 @@ function saveSettings() {
     data.settings.theme = {
       primary:$("#primaryColor").value,
       accent:$("#accentColor").value,
-      background:$("#backgroundColor").value
+      background:$("#backgroundColor").value,
+      timer:$("#timerColor").value
     };
     data.settings.subjects = Object.fromEntries(rows.map(row => [row.name,{ color:row.color, detail:"" }]));
     subjects = { ...data.settings.subjects };
