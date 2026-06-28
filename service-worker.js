@@ -1,10 +1,10 @@
-const CACHE_NAME = "tax-study-planner-v9";
+const CACHE_NAME = "tax-study-planner-v10";
 const APP_SHELL = [
   "./",
   "./index.html",
-  "./styles.css",
-  "./app.js",
-  "./manifest.webmanifest",
+  "./styles.css?v=10",
+  "./app.js?v=10",
+  "./manifest.webmanifest?v=10",
   "./app-icon.svg",
   "./icons/icon-192.png",
   "./icons/icon-512.png",
