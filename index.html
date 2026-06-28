@@ -33,6 +33,15 @@
         <button class="nav-item" data-page="study">
           <span class="nav-icon">▤</span><span>공부 기록</span>
         </button>
+        <button class="nav-item" data-page="curriculum">
+          <span class="nav-icon">☷</span><span>커리큘럼</span>
+        </button>
+        <button class="nav-item" data-page="auto">
+          <span class="nav-icon">✦</span><span>자동 계획</span>
+        </button>
+        <button class="nav-item" data-page="planner">
+          <span class="nav-icon">◷</span><span>스터디 플래너</span>
+        </button>
         <button class="nav-item" data-page="review">
           <span class="nav-icon">↻</span><span>오답 · 복습</span>
           <span class="nav-badge" id="reviewBadge">0</span>
@@ -45,6 +54,10 @@
         </button>
         <button class="nav-item" data-page="settings">
           <span class="nav-icon">⚙</span><span>꾸미기 · 설정</span>
+        </button>
+        <button class="nav-item" data-page="trash">
+          <span class="nav-icon">♲</span><span>휴지통</span>
+          <span class="nav-badge trash-badge" id="trashBadge">0</span>
         </button>
       </nav>
 
@@ -135,6 +148,47 @@
           </article>
         </div>
 
+        <article class="panel todo-panel">
+          <div class="panel-head">
+            <div><span class="section-kicker coral">TODAY PLAN</span><h2>오늘 해야 할 일</h2></div>
+            <span class="todo-progress" id="todoProgress">0 / 0 완료</span>
+          </div>
+          <form class="todo-add-form" id="todoAddForm">
+            <select id="todoSubject" aria-label="할 일 과목"></select>
+            <input id="todoText" maxlength="100" placeholder="예: 회계학 기출 30문제 풀기" required>
+            <input id="todoTime" type="time" aria-label="예정 시간">
+            <button class="primary-button" type="submit">＋ 추가</button>
+          </form>
+          <div class="todo-list" id="todoList"></div>
+        </article>
+
+        <article class="panel auto-home-panel">
+          <div class="panel-head">
+            <div><span class="section-kicker coral">AUTO STUDY</span><h2>오늘의 자동 계획</h2></div>
+            <button class="text-button" data-page-link="auto">자동 계획 보기 ›</button>
+          </div>
+          <div class="auto-home-grid">
+            <div>
+              <h3>권장 목표</h3>
+              <div id="homeAutoPlan" class="compact-plan-list"></div>
+            </div>
+            <div>
+              <h3>최소 목표 · 이월</h3>
+              <div id="homeMinPlan" class="compact-plan-list"></div>
+              <div id="homeCarryover" class="carryover-note"></div>
+            </div>
+            <div>
+              <h3>커리큘럼 진행률</h3>
+              <div id="curriculumProgressHome" class="compact-progress-list"></div>
+            </div>
+          </div>
+          <div id="overloadHome" class="overload-box"></div>
+          <div class="auto-home-actions">
+            <button class="primary-button" id="homeBuildPlanner">오늘 스터디 플래너 만들기</button>
+            <button class="secondary-button" data-page-link="planner">스터디 플래너 바로가기</button>
+          </div>
+        </article>
+
         <div class="metric-grid">
           <article class="metric-card">
             <div class="metric-icon peach">◷</div>
@@ -196,6 +250,72 @@
             <table>
               <thead><tr><th>날짜</th><th>과목 / 세부영역</th><th>공부유형</th><th>공부시간</th><th>순공시간</th><th>문제</th><th>정답률</th><th>회독</th><th></th></tr></thead>
               <tbody id="studyTable"></tbody>
+            </table>
+          </div>
+        </article>
+      </section>
+
+      <section class="page" id="curriculumPage">
+        <div class="page-toolbar">
+          <div>
+            <p class="page-description">과목별 강의, 기출, 단어 DAY처럼 끝내야 할 분량을 등록하면 남은 기간에 맞춰 자동 배분됩니다.</p>
+          </div>
+          <button class="primary-button" data-open-modal="curriculum">＋ 커리큘럼 추가</button>
+        </div>
+        <div class="summary-strip" id="curriculumSummary"></div>
+        <div class="curriculum-grid" id="curriculumList"></div>
+      </section>
+
+      <section class="page" id="autoPage">
+        <div class="page-toolbar">
+          <div>
+            <p class="page-description">남은 분량, 마감일, 우선순위, 하루 공부 가능 시간을 기준으로 오늘 해야 할 양을 계산합니다.</p>
+          </div>
+          <div class="toolbar-actions">
+            <button class="secondary-button" id="refreshAutoPlan">다시 계산</button>
+            <button class="primary-button" id="buildPlannerFromAuto">오늘 시간표로 배치</button>
+          </div>
+        </div>
+        <div id="autoWarnings" class="warning-stack"></div>
+        <div class="auto-target-grid">
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">MINIMUM</span><h2>오늘 최소 목표</h2></div></div>
+            <div id="minimumPlan" class="auto-plan-list"></div>
+          </article>
+          <article class="panel recommended-panel">
+            <div class="panel-head"><div><span class="section-kicker coral">RECOMMENDED</span><h2>오늘 권장 목표</h2></div></div>
+            <div id="recommendedPlan" class="auto-plan-list"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">STRETCH</span><h2>초과 목표</h2></div></div>
+            <div id="stretchPlan" class="auto-plan-list"></div>
+          </article>
+        </div>
+        <article class="panel carryover-panel">
+          <div class="panel-head">
+            <div><span class="section-kicker coral">CARRY OVER</span><h2>미완료 이월 항목</h2></div>
+            <button class="secondary-button" id="carryOverToToday">오늘 계획에 추가</button>
+          </div>
+          <div id="carryoverList" class="auto-plan-list"></div>
+        </article>
+      </section>
+
+      <section class="page" id="plannerPage">
+        <div class="page-toolbar">
+          <div>
+            <p class="page-description">자동 계산된 공부량을 시간표로 배치하고, 완료 체크를 하면 커리큘럼 진행률에 반영됩니다.</p>
+          </div>
+          <div class="toolbar-actions">
+            <button class="secondary-button" id="createPlannerFromAuto">자동 계획 불러오기</button>
+            <button class="primary-button" data-open-modal="planner">＋ 시간표 추가</button>
+          </div>
+        </div>
+        <div class="summary-strip" id="plannerSummary"></div>
+        <article class="panel table-panel">
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>시간</th><th>과목 / 세부영역</th><th>공부유형</th><th>해야 할 분량</th><th>상태</th><th>메모</th><th></th></tr></thead>
+              <tbody id="studyPlannerTable"></tbody>
             </table>
           </div>
         </article>
@@ -290,6 +410,14 @@
             <div class="panel-head"><div><span class="section-kicker coral">PROGRESS</span><h2>회독 · 오답 현황</h2></div></div>
             <div class="progress-matrix" id="progressMatrix"></div>
           </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker">CURRICULUM</span><h2>커리큘럼별 진행률</h2></div></div>
+            <div class="curriculum-stat-list" id="curriculumStats"></div>
+          </article>
+          <article class="panel">
+            <div class="panel-head"><div><span class="section-kicker coral">PLAN</span><h2>계획 대비 실제 완료율</h2></div></div>
+            <div class="progress-matrix" id="planStats"></div>
+          </article>
         </div>
       </section>
 
@@ -356,11 +484,33 @@
             <div class="subject-editor" id="subjectEditor"></div>
             <button class="secondary-button add-subject" id="addSubject">＋ 과목 추가</button>
           </article>
+
+          <article class="panel setting-panel sync-setting">
+            <div class="setting-title"><span class="setting-number">05</span><div><h3>PC · 모바일 데이터 연동</h3><p>백업 파일로 두 기기의 기록을 안전하게 옮길 수 있습니다.</p></div></div>
+            <div class="sync-illustration">
+              <span>PC</span><i>⇄</i><span>모바일</span>
+            </div>
+            <div class="sync-actions">
+              <button class="primary-button" id="exportData">백업 파일 내보내기</button>
+              <label class="secondary-button file-button">백업 파일 불러오기<input type="file" id="importData" accept=".json,application/json"></label>
+            </div>
+            <p class="permission-status">최신 기기에서 내보낸 파일을 다른 기기에서 불러오세요. 기존 데이터는 안전하게 백업한 뒤 교체됩니다.</p>
+          </article>
         </div>
         <div class="settings-savebar">
           <span id="settingsSaveHint">변경사항은 이 기기에 저장됩니다.</span>
           <button class="primary-button" id="saveSettings">설정 저장하기</button>
         </div>
+      </section>
+
+      <section class="page" id="trashPage">
+        <div class="page-toolbar">
+          <div>
+            <p class="page-description">삭제한 기록을 복원하거나 완전히 지울 수 있습니다.</p>
+          </div>
+          <button class="secondary-button" id="emptyTrash">휴지통 비우기</button>
+        </div>
+        <div class="trash-grid" id="trashGrid"></div>
       </section>
     </main>
   </div>

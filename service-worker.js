@@ -1,4 +1,4 @@
-const CACHE_NAME = "tax-study-planner-v7";
+const CACHE_NAME = "tax-study-planner-v9";
 const APP_SHELL = [
   "./",
   "./index.html",
