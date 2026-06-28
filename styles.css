@@ -395,6 +395,8 @@ td small { color: var(--muted); }
 }
 .setting-field { display: block; margin-top: 14px; color: var(--muted); font-size: 9px; }
 .setting-field input { margin-top: 7px; }
+.study-time-settings { margin-top: 8px; display: grid; grid-template-columns: 1fr 1fr; gap: 0 10px; }
+.study-time-settings .setting-field input { margin-top: 7px; }
 .subject-editor { margin-top: 18px; display: grid; gap: 8px; }
 .subject-edit-row { display: grid; grid-template-columns: 35px 1fr 31px; align-items: center; gap: 8px; }
 .subject-edit-row input[type="color"] { width: 35px; height: 35px; border: 0; padding: 0; border-radius: 9px; overflow: hidden; background: transparent; }
@@ -593,6 +595,7 @@ body.dark .warning-box, body.dark .overload-box { color: #ffd9c8; background: #4
   .settings-hero h2 { font-size: 20px; }
   .settings-hero p { max-width: 220px; }
   .color-settings { grid-template-columns: 1fr; }
+  .study-time-settings { grid-template-columns: 1fr; }
   .quiz-intro { align-items: stretch; flex-direction: column; }
   .quiz-start-actions { flex-direction: column; }
   .quiz-stage { padding: 17px; }

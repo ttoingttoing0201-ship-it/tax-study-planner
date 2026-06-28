@@ -12,8 +12,8 @@
   <title>세무직 합격 플래너</title>
   <link rel="icon" href="app-icon.svg" type="image/svg+xml">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-  <link rel="manifest" href="manifest.webmanifest?v=11">
-  <link rel="stylesheet" href="styles.css?v=11">
+  <link rel="manifest" href="manifest.webmanifest?v=12">
+  <link rel="stylesheet" href="styles.css?v=12">
 </head>
 <body>
   <div class="app-shell">
@@ -466,7 +466,26 @@
           </article>
 
           <article class="panel setting-panel">
-            <div class="setting-title"><span class="setting-number">03</span><div><h3>응시 직렬</h3><p>직렬을 선택하면 추천 과목이 자동으로 구성됩니다.</p></div></div>
+            <div class="setting-title"><span class="setting-number">03</span><div><h3>학습 시간 설정</h3><p>홈 목표와 자동 계획의 하루 가능 시간을 바꿀 수 있습니다.</p></div></div>
+            <div class="study-time-settings">
+              <label class="setting-field">하루 목표 순공시간
+                <input id="dailyGoalHours" type="number" min="1" max="18" step="0.5" placeholder="8">
+              </label>
+              <label class="setting-field">하루 공부 가능 시간
+                <input id="availableHours" type="number" min="1" max="18" step="0.5" placeholder="8">
+              </label>
+              <label class="setting-field">자동 시간표 시작 시간
+                <input id="plannerStartTime" type="time" value="09:00">
+              </label>
+              <label class="setting-field">과목 사이 쉬는 시간
+                <input id="plannerBreakMin" type="number" min="0" max="60" step="5" placeholder="10">
+              </label>
+            </div>
+            <p class="permission-status">목표 순공시간은 홈 달성률에, 공부 가능 시간은 커리큘럼 과부하 경고에 사용됩니다.</p>
+          </article>
+
+          <article class="panel setting-panel">
+            <div class="setting-title"><span class="setting-number">04</span><div><h3>응시 직렬</h3><p>직렬을 선택하면 추천 과목이 자동으로 구성됩니다.</p></div></div>
             <select class="large-select" id="jobSeries">
               <option value="세무직">세무직</option>
               <option value="일반행정직">일반행정직</option>
@@ -480,13 +499,13 @@
           </article>
 
           <article class="panel setting-panel">
-            <div class="setting-title"><span class="setting-number">04</span><div><h3>과목 구성</h3><p>과목 이름과 플래너 색상을 직접 수정할 수 있습니다.</p></div></div>
+            <div class="setting-title"><span class="setting-number">05</span><div><h3>과목 구성</h3><p>과목 이름과 플래너 색상을 직접 수정할 수 있습니다.</p></div></div>
             <div class="subject-editor" id="subjectEditor"></div>
             <button class="secondary-button add-subject" id="addSubject">＋ 과목 추가</button>
           </article>
 
           <article class="panel setting-panel sync-setting">
-            <div class="setting-title"><span class="setting-number">05</span><div><h3>PC · 모바일 데이터 연동</h3><p>백업 파일로 두 기기의 기록을 안전하게 옮길 수 있습니다.</p></div></div>
+            <div class="setting-title"><span class="setting-number">06</span><div><h3>PC · 모바일 데이터 연동</h3><p>백업 파일로 두 기기의 기록을 안전하게 옮길 수 있습니다.</p></div></div>
             <div class="sync-illustration">
               <span>PC</span><i>⇄</i><span>모바일</span>
             </div>
@@ -538,6 +557,6 @@
   </div>
 
   <div class="toast" id="toast">저장했어요!</div>
-  <script src="app.js?v=11"></script>
+  <script src="app.js?v=12"></script>
 </body>
 </html>
