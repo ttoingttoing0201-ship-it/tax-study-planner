@@ -727,6 +727,10 @@ function curriculumProgress(item) {
   return { target, done, remaining, rate, daysLeft:inclusiveDaysUntil(item.deadline||todayKey) };
 }
 
+function curriculumHasStarted(item) {
+  return !item.startDate || item.startDate <= todayKey;
+}
+
 function priorityWeight(priority) {
   return priority==="높음" ? 1.18 : priority==="낮음" ? .82 : 1;
 }
@@ -752,7 +756,7 @@ function formatPlanRange(item, qty) {
 }
 
 function getAutoPlan() {
-  const active=data.curriculum.filter(item => curriculumProgress(item).remaining > 0);
+  const active=data.curriculum.filter(item => curriculumProgress(item).remaining > 0 && curriculumHasStarted(item));
   const items=active.map(item => {
     const progress=curriculumProgress(item);
     const average=progress.remaining/progress.daysLeft;
